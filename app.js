@@ -1,360 +1,80 @@
 (() => {
   "use strict";
 
-  const SLIDE_W = 1280;
-  const SLIDE_H = 720;
-
-  const slides = [
-  {
-    "id": 1,
-    "layers": [
-      {
-        "kind": "text",
-        "text": "Boulet de canon lâché du haut du mât d’un bateau :",
-        "x": 0,
-        "y": 0,
-        "w": 1280,
-        "h": 242,
-        "font_size": 54.0,
-        "bold": true,
-        "color": null
-      },
-      {
-        "kind": "img",
-        "src": "assets/img_01.png",
-        "x": 388,
-        "y": 209,
-        "w": 547,
-        "h": 517
-      },
-      {
-        "kind": "img",
-        "src": "assets/img_02.gif",
-        "x": 459,
-        "y": 277,
-        "w": 393,
-        "h": 408
-      },
-      {
-        "kind": "text",
-        "text": "Décrire sa chute.",
-        "x": 372,
-        "y": 114,
-        "w": 960,
-        "h": 106,
-        "font_size": 72.0,
-        "bold": true,
-        "color": "#000000"
-      }
-    ]
-  },
-  {
-    "id": 2,
-    "layers": [
-      {
-        "kind": "img",
-        "src": "assets/img_03.jpg",
-        "x": 0,
-        "y": 163,
-        "w": 1280,
-        "h": 557
-      },
-      {
-        "kind": "text",
-        "text": "Le bateau se déplace à vitesse constante dans le référentiel du quai",
-        "x": 160,
-        "y": 20,
-        "w": 960,
-        "h": 129,
-        "font_size": 40.0,
-        "bold": true,
-        "color": null
-      },
-      {
-        "kind": "img",
-        "src": "assets/img_04.gif",
-        "x": -318,
-        "y": 292,
-        "w": 349,
-        "h": 361
-      },
-      {
-        "kind": "img",
-        "src": "assets/img_05.gif",
-        "x": 0,
-        "y": -37,
-        "w": 128,
-        "h": 130
-      },
-      {
-        "kind": "img",
-        "src": "assets/img_06.gif",
-        "x": 1191,
-        "y": -9,
-        "w": 92,
-        "h": 93
-      },
-      {
-        "kind": "img",
-        "src": "assets/img_02.gif",
-        "x": -238,
-        "y": 209,
-        "w": 95,
-        "h": 98
-      }
-    ]
-  },
-  {
-    "id": 3,
-    "layers": [
-      {
-        "kind": "img",
-        "src": "assets/img_03.jpg",
-        "x": 0,
-        "y": 163,
-        "w": 1280,
-        "h": 557
-      },
-      {
-        "kind": "text",
-        "text": "Le bateau se déplace à vitesse constante dans le référentiel du quai",
-        "x": 160,
-        "y": 20,
-        "w": 960,
-        "h": 129,
-        "font_size": 40.0,
-        "bold": true,
-        "color": null
-      },
-      {
-        "kind": "text",
-        "text": "Cliquer pour démarrer l’animation et observer le mouvement de la boule",
-        "x": 43,
-        "y": 163,
-        "w": 1216,
-        "h": 475,
-        "font_size": 16.0,
-        "bold": false,
-        "color": null
-      },
-      {
-        "kind": "text",
-        "text": "vitesse constante",
-        "x": 330,
-        "y": 496,
-        "w": 205,
-        "h": 23,
-        "font_size": 16.0,
-        "bold": true,
-        "color": "#0000ff"
-      },
-      {
-        "kind": "text",
-        "text": "Par rapport au référentiel quai",
-        "x": 164,
-        "y": 594,
-        "w": 960,
-        "h": 129,
-        "font_size": 44.0,
-        "bold": true,
-        "color": "#0409c8"
-      }
-    ]
-  },
-  {
-    "id": 4,
-    "layers": [
-      {
-        "kind": "img",
-        "src": "assets/img_03.jpg",
-        "x": 0,
-        "y": 163,
-        "w": 1280,
-        "h": 557
-      },
-      {
-        "kind": "text",
-        "text": "Vue… du bateau !",
-        "x": 43,
-        "y": 48,
-        "w": 1216,
-        "h": 88,
-        "font_size": 54.0,
-        "bold": true,
-        "color": null
-      },
-      {
-        "kind": "text",
-        "text": "Cliquer pour démarrer l’animation et observer le mouvement de la boule",
-        "x": 43,
-        "y": 163,
-        "w": 1216,
-        "h": 475,
-        "font_size": 16.0,
-        "bold": false,
-        "color": null
-      },
-      {
-        "kind": "text",
-        "text": "Par rapport au référentiel bateau",
-        "x": 164,
-        "y": 594,
-        "w": 960,
-        "h": 129,
-        "font_size": 44.0,
-        "bold": true,
-        "color": "#0409c8"
-      }
-    ]
-  }
-];
-
-  const stage = document.getElementById("stage");
-  const status = document.getElementById("status");
-  const prevBtn = document.getElementById("prevBtn");
-  const nextBtn = document.getElementById("nextBtn");
-  const playBtn = document.getElementById("playBtn");
-
-  // slideshow timing
   const SLIDE_MS = 6500;
+  const slides = Array.from(document.querySelectorAll(".slide"));
+  const stage = document.getElementById("stage");
+  const prevBtn = document.getElementById("prev");
+  const nextBtn = document.getElementById("next");
+  const playBtn = document.getElementById("play");
+  const status = document.getElementById("status");
 
   let idx = 0;
   let playing = true;
   let tHandle = null;
 
-  function el(tag, cls) {
-    const e = document.createElement(tag);
-    if (cls) e.className = cls;
-    return e;
+  // --- "Positions successives" (croix bleues) ---
+  function drawCross(ctx, x, y, size = 16, lineW = 6) {
+    ctx.save();
+    ctx.strokeStyle = "#0000ff";
+    ctx.lineWidth = lineW;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(x - size/2, y - size/2);
+    ctx.lineTo(x + size/2, y + size/2);
+    ctx.moveTo(x - size/2, y + size/2);
+    ctx.lineTo(x + size/2, y - size/2);
+    ctx.stroke();
+    ctx.restore();
   }
 
-  function px(n) { return `${n}px`; }
-
-  function buildSlide(s) {
-    const root = el("div", "slide");
-    root.dataset.slideId = String(s.id);
-
-    for (const layer of s.layers) {
-      if (layer.kind === "img") {
-        const img = el("img", "layer");
-        img.src = layer.src;
-        img.alt = "";
-        img.style.left = px(layer.x);
-        img.style.top = px(layer.y);
-        img.style.width = px(layer.w);
-        img.style.height = px(layer.h);
-        root.appendChild(img);
-      } else if (layer.kind === "text") {
-        const d = el("div", "layer txt");
-        d.innerHTML = layer.text;
-        d.style.left = px(layer.x);
-        d.style.top = px(layer.y);
-        d.style.width = px(layer.w);
-        d.style.height = px(layer.h);
-        d.style.fontSize = px(layer.font_size || 24);
-        d.style.fontWeight = layer.bold ? "700" : "400";
-        d.style.fontStyle = layer.italic ? "italic" : "normal";
-        if (layer.color) d.style.color = layer.color;
-        root.appendChild(d);
-      }
-    }
-
-    // Add simulations on slides 3 and 4
-    if (s.id === 3 || s.id === 4) {
-      const c = el("canvas", "sim");
-      // internal resolution = slide size
-      c.width = SLIDE_W;
-      c.height = SLIDE_H;
-      root.appendChild(c);
-
-      const hint = el("div", "hint");
-      hint.innerHTML = "<strong>🖱️ Clic :</strong> démarrer/relancer l’animation du boulet";
-      root.appendChild(hint);
-
-      attachSimulation(c, s.id);
-    }
-
-    return root;
-  }
-
-  // --- Simulation ---
-  function attachSimulation(canvas, slideId) {
+  function animateCrosses(slideEl, points, stepMs = 90) {
+    const canvas = slideEl.querySelector("canvas.overlay");
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
-    let running = false;
-    let startT = 0;
 
-    // Background photo-like region is already in the slide via img_03.jpg.
-    // We'll draw the ball + a simple mast marker to guide the eye.
-    const mastX = 740;     // approx on background
-    const mastTopY = 235;
-    const deckY = 515;
+    let start = null;
+    function frame(ts) {
+      if (start === null) start = ts;
+      const elapsed = ts - start;
+      const k = Math.min(points.length, 1 + Math.floor(elapsed / stepMs));
 
-    const g = 1400;        // px/s^2 (visual)
-    const vBoat = 230;     // px/s (visual constant speed)
-    const ballR = 10;
-
-    function reset() {
-      running = true;
-      startT = performance.now();
-      requestAnimationFrame(frame);
-    }
-
-    function frame(t) {
-      if (!running) return;
-      const dt = (t - startT) / 1000;
-
-      // Motion model
-      // Slide 3: "référentiel quai" → ball keeps horizontal velocity vBoat while falling.
-      // Slide 4: "référentiel bateau" → ball falls vertically (horizontal relative speed 0).
-      const vx = (slideId === 3) ? vBoat : 0;
-      const x = mastX + vx * dt;
-      const y = mastTopY + 0.5 * g * dt * dt;
-
-      // stop when reaching deck area
-      const yStop = deckY - ballR;
-      const xStop = x;
-
-      // redraw only the overlay (keep underlying slide visible)
-      ctx.clearRect(0, 0, SLIDE_W, SLIDE_H);
-
-      // mast marker (thin line) to show the "vertical" under the mast
-      ctx.save();
-      ctx.globalAlpha = 0.85;
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = "rgba(0,0,0,0.65)";
-      ctx.beginPath();
-      ctx.moveTo(mastX, mastTopY);
-      ctx.lineTo(mastX, deckY);
-      ctx.stroke();
-      ctx.restore();
-
-      // ball
-      const yy = Math.min(y, yStop);
-      ctx.beginPath();
-      ctx.arc(xStop, yy, ballR, 0, Math.PI * 2);
-      ctx.fillStyle = "rgba(0,0,0,0.85)";
-      ctx.fill();
-
-      if (y >= yStop) {
-        running = false;
-        return;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < k; i++) {
+        const [x, y] = points[i];
+        drawCross(ctx, x, y);
       }
-      requestAnimationFrame(frame);
-    }
 
-    canvas.addEventListener("click", () => {
-      reset();
-    });
+      if (k < points.length) requestAnimationFrame(frame);
+    }
+    requestAnimationFrame(frame);
   }
 
-  // --- Mount ---
-  const domSlides = slides.map(buildSlide);
-  for (const s of domSlides) stage.insertBefore(s, stage.firstChild);
+  // Points calibrés à partir du rendu des diapositives du PPTX (1280×720)
+  const ptsSlide3 = [[306.0, 388.0], [343.06666666666666, 388.5422222222222], [380.1333333333333, 390.1688888888889], [417.2, 392.88], [454.26666666666665, 396.67555555555555], [491.33333333333337, 401.55555555555554], [528.4, 407.52], [565.4666666666667, 414.56888888888886], [602.5333333333333, 422.70222222222225], [639.5999999999999, 431.91999999999996], [676.6666666666667, 442.22222222222223], [713.7333333333333, 453.60888888888894], [750.8, 466.08000000000004], [787.8666666666667, 479.6355555555556], [824.9333333333334, 494.27555555555557], [862.0, 510.0]];
+  const ptsSlide4 = [[611.0, 388.0], [611.0, 391.6111111111111], [611.0, 402.44444444444446], [611.0, 420.5], [611.0, 445.77777777777777], [611.0, 478.27777777777777], [611.0, 518.0]];
+
+  // Click on slides 3/4 → replay the intended animation
+  slides.forEach((s) => {
+    const id = Number(s.dataset.id);
+    if (id === 3) {
+      s.addEventListener("click", () => animateCrosses(s, ptsSlide3));
+    }
+    if (id === 4) {
+      s.addEventListener("click", () => animateCrosses(s, ptsSlide4));
+    }
+  });
 
   function show(i) {
-    idx = (i + domSlides.length) % domSlides.length;
-    domSlides.forEach((s, k) => s.classList.toggle("active", k === idx));
-    status.textContent = `${idx + 1}/${domSlides.length}`;
+    idx = (i + slides.length) % slides.length;
+    slides.forEach((s, k) => s.classList.toggle("active", k === idx));
+    status.textContent = `${idx + 1}/${slides.length}`;
+
+    // stop overlays when leaving the slide
+    slides.forEach((s) => {
+      const c = s.querySelector("canvas.overlay");
+      if (c) c.getContext("2d").clearRect(0, 0, c.width, c.height);
+    });
   }
 
   function scheduleNext() {
@@ -366,30 +86,20 @@
     }, SLIDE_MS);
   }
 
-  prevBtn.addEventListener("click", () => {
-    show(idx - 1);
-    scheduleNext();
-  });
-
-  nextBtn.addEventListener("click", () => {
-    show(idx + 1);
-    scheduleNext();
-  });
-
+  prevBtn.addEventListener("click", () => { show(idx - 1); scheduleNext(); });
+  nextBtn.addEventListener("click", () => { show(idx + 1); scheduleNext(); });
   playBtn.addEventListener("click", () => {
     playing = !playing;
     playBtn.textContent = playing ? "⏯️ Pause" : "▶️ Lecture";
     scheduleNext();
   });
 
-  // keyboard
   window.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowLeft") { prevBtn.click(); }
-    if (e.key === "ArrowRight") { nextBtn.click(); }
+    if (e.key === "ArrowLeft") prevBtn.click();
+    if (e.key === "ArrowRight") nextBtn.click();
     if (e.key === " ") { e.preventDefault(); playBtn.click(); }
   });
 
-  // start
   show(0);
   scheduleNext();
 })();

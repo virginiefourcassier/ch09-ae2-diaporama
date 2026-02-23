@@ -1,129 +1,68 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>ch09 AE2 — Diaporama animé</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ch09 AE2 — Diaporama</title>
   <style>
-    :root {
-      --w: 1280px;
-      --h: 720px;
-    }
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: #111;
-      height: 100%;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-    .wrap {
-      height: 100%;
-      display: grid;
-      place-items: center;
-      padding: 10px;
-      box-sizing: border-box;
-    }
-    /* responsive 16:9 stage */
+    :root { --w: 1280px; --h: 720px; }
+    body { margin:0; font-family: Arial, Helvetica, sans-serif; background:#111; }
+    .wrap { max-width: var(--w); margin: 0 auto; padding: 10px; }
     .stage {
       position: relative;
-      width: min(100vw - 20px, calc((100vh - 20px) * (16/9)));
+      width: 100%;
       aspect-ratio: 16 / 9;
-      background: white;
+      background: #000;
+      border-radius: 14px;
       overflow: hidden;
-      border-radius: 10px;
-      box-shadow: 0 12px 30px rgba(0,0,0,.55);
+      box-shadow: 0 18px 45px rgba(0,0,0,.55);
     }
     .slide {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      transition: opacity 500ms ease;
-      pointer-events: none;
-      background: white;
+      position:absolute; inset:0;
+      opacity:0; pointer-events:none;
+      transition: opacity .35s ease;
     }
-    .slide.active {
-      opacity: 1;
-      pointer-events: auto;
+    .slide.active { opacity:1; pointer-events:auto; }
+    .slide img.bg { width:100%; height:100%; object-fit:contain; display:block; background:#000; }
+    canvas.overlay {
+      position:absolute; inset:0;
+      width:100%; height:100%;
     }
-    .layer {
-      position: absolute;
-      box-sizing: border-box;
-    }
-    .txt {
-      font-family: Arial, Helvetica, sans-serif;
-      color: #000;
-      line-height: 1.15;
-      word-wrap: break-word;
-    }
-    .controls {
-      position: absolute;
-      left: 12px;
-      right: 12px;
-      bottom: 12px;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      justify-content: space-between;
-      pointer-events: none;
-    }
-    .btns {
-      display: flex;
-      gap: 8px;
-      pointer-events: auto;
+    .bar {
+      display:flex; gap:8px; align-items:center; justify-content:center;
+      margin-top:10px; flex-wrap:wrap;
     }
     button {
-      border: 0;
-      border-radius: 999px;
-      padding: 8px 12px;
-      background: rgba(0,0,0,.75);
-      color: #fff;
-      cursor: pointer;
-      font-size: 14px;
+      border:0; border-radius: 10px;
+      padding:10px 14px; font-size: 15px;
+      cursor:pointer;
     }
-    button:active { transform: translateY(1px); }
-    .status {
-      pointer-events: none;
-      color: rgba(255,255,255,.9);
-      font-size: 13px;
-      background: rgba(0,0,0,.45);
-      padding: 6px 10px;
-      border-radius: 999px;
-    }
-    /* canvas overlay for animation slides */
-    canvas.sim {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
-    .hint {
-      position: absolute;
-      left: 14px;
-      top: 14px;
-      background: rgba(255,255,255,.85);
-      border: 2px solid rgba(0,0,0,.25);
-      border-radius: 10px;
-      padding: 8px 10px;
-      font-size: 14px;
-      max-width: 55%;
-    }
-    .hint strong { color: #111; }
+    .status { color:#eee; font-size:14px; padding: 0 10px; }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="stage" id="stage" aria-label="Diaporama">
-      <!-- Slides injected by JS -->
-      <div class="controls">
-        <div class="btns">
-          <button id="prevBtn" type="button">⏮️ Précédent</button>
-          <button id="playBtn" type="button">⏯️ Pause</button>
-          <button id="nextBtn" type="button">⏭️ Suivant</button>
-        </div>
-        <div class="status" id="status">1/4</div>
+    <div class="stage" id="stage">
+      <div class="slide" data-id="1"><img class="bg" src="assets/slide1.png" alt="Slide 1"></div>
+      <div class="slide" data-id="2"><img class="bg" src="assets/slide2.png" alt="Slide 2"></div>
+      <div class="slide" data-id="3">
+        <img class="bg" src="assets/slide3.png" alt="Slide 3">
+        <canvas class="overlay" width="1280" height="720"></canvas>
+      </div>
+      <div class="slide" data-id="4">
+        <img class="bg" src="assets/slide4.png" alt="Slide 4">
+        <canvas class="overlay" width="1280" height="720"></canvas>
       </div>
     </div>
+
+    <div class="bar">
+      <button id="prev">⏮️ Précédent</button>
+      <button id="play">⏯️ Pause</button>
+      <button id="next">⏭️ Suivant</button>
+      <span class="status" id="status">–</span>
+    </div>
   </div>
-  <script src="app.js?v=1"></script>
+
+  <script src="app.js?v=2"></script>
 </body>
 </html>
