@@ -11,11 +11,6 @@
     canvas{background:#000;max-width:100%;max-height:100%;width:auto;height:auto;border-radius:12px;box-shadow:0 18px 60px rgba(0,0,0,.55);}
     #bar{display:flex;gap:10px;align-items:center;justify-content:center;padding:10px 12px;color:#eee;}
     button{cursor:pointer;border:1px solid rgba(255,255,255,.18);background:#1d1d1d;color:#eee;border-radius:10px;padding:8px 12px;font-weight:600}
-    button:active{transform:translateY(1px)}
-    #hint{position:absolute;left:16px;top:16px;max-width:min(520px,calc(100% - 32px));
-      padding:10px 12px;border-radius:12px;background:rgba(0,0,0,.55);color:#fff;
-      border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(6px);font-size:14px;line-height:1.25}
-    #hint b{font-size:14px}
     #progress{min-width:140px;text-align:center;opacity:.9}
   </style>
 </head>
@@ -23,15 +18,13 @@
 <div id="wrap">
   <div id="stageWrap">
     <canvas id="c" width="1280" height="720"></canvas>
-    <div id="hint" style="display:none"></div>
   </div>
   <div id="bar">
     <button id="prev">⏮️ Précédent</button>
-    <button id="play">⏸️ Pause</button>
     <button id="next">Suivant ⏭️</button>
     <div id="progress"></div>
   </div>
 </div>
-<script src="app.js?v=4"></script>
+<script src="app.js?v=5"></script>
 </body>
 </html>
